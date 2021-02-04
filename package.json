@@ -1,0 +1,39 @@
+{
+  "name": "amazon-fullstack",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "Ecommerce website",
+  "main": "index.js",
+  "scripts": {
+    "heroku-postbuild": "cd frontend && npm install && npm run build",
+    "start": "nodemon --watch backend --exec  node --experimental-modules backend/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Macrichie/amazon-fullstack.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Macrichie/amazon-fullstack/issues"
+  },
+  "homepage": "https://github.com/Macrichie/amazon-fullstack#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-async-handler": "^1.1.4",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.11.10",
+    "react-paypal-button-v2": "^2.6.2"
+  },
+  "devDependencies": {
+    "eslint": "^7.18.0",
+    "eslint-plugin-react": "^7.22.0",
+    "nodemon": "^2.0.6"
+  },
+  "engines": {
+    "node": "12.4.0",
+    "npm": "6.9.0"
+  }
+}
