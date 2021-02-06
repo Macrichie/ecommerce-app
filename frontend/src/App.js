@@ -10,6 +10,7 @@ import OrderHistoryScreen from "./pages/OrderHistoryScreen";
 import OrderScreen from "./pages/OrderScreen";
 import PaymentMethodScreen from "./pages/PaymentMethodScreen";
 import PlaceOrderScreen from "./pages/PlaceOrderScreen";
+import ProductEditScreen from "./pages/ProductEditScreen";
 import ProductListScreen from "./pages/ProductListScreen";
 import ProductScreen from "./pages/ProductScreen";
 import ProfileScreen from "./pages/ProfileScreen";
@@ -107,7 +108,8 @@ function App() {
           {/* /cart/:id? -> ? is added so if user directly goto cart, it should show shopping cart without adding a new item to the cart */}
           <Route path="/cart/:id?" component={CartScreen}></Route>
 
-          <Route path="/product/:id" component={ProductScreen}></Route>
+          <Route path="/product/:id" component={ProductScreen} exact></Route>
+          <Route path="/product/:id/edit" component={ProductEditScreen} exact></Route>
           <Route path="/signin" component={SigninScreen}></Route>
           <Route path="/register" component={RegisterScreen}></Route>
           <Route path="/shipping" component={ShippingAddressScreen}></Route>

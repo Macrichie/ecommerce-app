@@ -8,8 +8,10 @@ import {
   orderUserListReducer,
 } from "./reducers/orderReducers";
 import {
+  productCreateReducer,
   productDetailsReducer,
   productListReducer,
+  productUpdateReducer,
 } from "./reducers/productReducers";
 import {
   userDetalsReducer,
@@ -49,6 +51,8 @@ const reducer = combineReducers({
   orderUserList: orderUserListReducer,
   userDetails: userDetalsReducer,
   userUpdateProfile: userUpdateProfileReducer,
+  productCreate: productCreateReducer,
+  productUpdate: productUpdateReducer,
 });
 
 const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
