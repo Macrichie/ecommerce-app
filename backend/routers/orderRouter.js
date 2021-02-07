@@ -1,9 +1,15 @@
 import express from "express";
 import expressAsyncHandler from "express-async-handler";
 import Order from "../models/orderModel.js";
-import { isAuth } from "../utils.js";
+import { isAdmin, isAuth } from "../utils.js";
 
 const orderRouter = express.Router();
+
+// Send all orders to frontend
+orderRouter.get('/', isAuth, isAdmin, expressAsyncHandler(async(req, res) => {
+  const orders = await Order.find({}).populate('user', 'name')
+  res.send(orders)
+}))
 
 orderRouter.get('/myorderhistory', isAuth, expressAsyncHandler(async(req, res) => {
   const orders = await Order.find({user: req.user._id})

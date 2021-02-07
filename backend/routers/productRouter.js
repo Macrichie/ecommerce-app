@@ -6,7 +6,7 @@ import { isAdmin, isAuth } from "../utils.js";
 
 const productRouter = express.Router();
 
-// Send list of products to frontend
+// Send All products to frontend
 productRouter.get(
   "/",
   expressAsyncHandler(async (req, res) => {

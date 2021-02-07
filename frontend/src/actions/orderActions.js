@@ -13,7 +13,32 @@ import {
   ORDER_USER_LIST_REQUEST,
   ORDER_USER_LIST_FAIL,
   ORDER_USER_LIST_SUCCESS,
+  ORDER_LIST_REQUEST,
+  ORDER_LIST_FAIL,
+  ORDER_LIST_SUCCESS,
 } from "./../constants/orderConstants";
+
+export const listOrders = () => async (dispatch, getState) => {
+  dispatch({ type: ORDER_LIST_REQUEST });
+  const {
+    userSignin: { userInfo },
+  } = getState();
+
+  try {
+    const { data } = await Axios.get("/api/orders", {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    });
+    dispatch({ type: ORDER_LIST_SUCCESS, payload: data });
+  } catch (error) {
+    const message =
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message;
+    dispatch({ type: ORDER_LIST_FAIL, payload: message });
+  }
+};
 
 export const createOrder = (order) => async (dispatch, getState) => {
   dispatch({
@@ -21,10 +46,10 @@ export const createOrder = (order) => async (dispatch, getState) => {
     payload: order,
   });
 
+  const {
+    userSignin: { userInfo },
+  } = getState();
   try {
-    const {
-      userSignin: { userInfo },
-    } = getState();
     const { data } = await Axios.post("/api/orders", order, {
       headers: {
         Authorization: `Bearer ${userInfo.token}`,
@@ -37,9 +62,10 @@ export const createOrder = (order) => async (dispatch, getState) => {
     dispatch({ type: CART_EMPTY });
     localStorage.removeItem("cartItems");
   } catch (error) {
-    const message = error.response && error.response.data.message
-    ? error.response.data.message
-    : error.message
+    const message =
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message;
     dispatch({
       type: ORDER_CREATE_FAIL,
       payload: message,

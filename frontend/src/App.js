@@ -7,6 +7,7 @@ import PrivateRoute from "./components/PrivateRoute";
 import CartScreen from "./pages/CartScreen";
 import HomeScreen from "./pages/HomeScreen";
 import OrderHistoryScreen from "./pages/OrderHistoryScreen";
+import OrderListScreen from "./pages/OrderListScreen";
 import OrderScreen from "./pages/OrderScreen";
 import PaymentMethodScreen from "./pages/PaymentMethodScreen";
 import PlaceOrderScreen from "./pages/PlaceOrderScreen";
@@ -121,8 +122,12 @@ function App() {
             path="/profile"
             component={ProfileScreen}
           ></PrivateRoute>
+
           <AdminRoute path="/productlist"
             component={ProductListScreen}></AdminRoute>
+          <AdminRoute path="/orderlist"
+            component={OrderListScreen}></AdminRoute>
+
           <Route exact path="/" component={HomeScreen}></Route>
         </main>
         <footer>Designed with ❤️ by Olakunle</footer>
