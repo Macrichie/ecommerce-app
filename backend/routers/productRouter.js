@@ -63,25 +63,48 @@ productRouter.post(
 );
 
 // update product
-productRouter.put('/:id', isAuth, isAdmin, expressAsyncHandler(async(req, res) => {
-  const productId = req.params.id
-  const product = await Product.findById(productId)
-  if(product) {
-    product.name = req.body.name
-    product.price = req.body.price
-    product.image = req.body.image
-    product.category = req.body.category
-    product.brand = req.body.brand
-    product.countInStock = req.body.countInStock
-    product.description = req.body.description
-    const updatedProduct = product.save()
-    res.send({message: "Update Successfull", product: updatedProduct})
-  } else {
-    res.status(404).send({ message: "Product Not Found" })
-  }
-}))
+productRouter.put(
+  "/:id",
+  isAuth,
+  isAdmin,
+  expressAsyncHandler(async (req, res) => {
+    const productId = req.params.id;
+    const product = await Product.findById(productId);
+    if (product) {
+      product.name = req.body.name;
+      product.price = req.body.price;
+      product.image = req.body.image;
+      product.category = req.body.category;
+      product.brand = req.body.brand;
+      product.countInStock = req.body.countInStock;
+      product.description = req.body.description;
+      const updatedProduct = product.save();
+      res.send({ message: "Update Successfull", product: updatedProduct });
+    } else {
+      res.status(404).send({ message: "Product Not Found" });
+    }
+  })
+);
 
-
-
+// Delete product
+productRouter.delete(
+  "/:id",
+  isAuth,
+  isAdmin,
+  expressAsyncHandler(async (req, res) => {
+    // lookup product from database
+    const product = await Product.findById(req.params.id);
+    // if product exists, remove it and return response
+    if (product) {
+      const deletedProduct = await product.remove();
+      res.send({
+        message: "Product Successfully Removed!",
+        product: deletedProduct,
+      });
+    } else {
+      res.status(404).send({ message: "Product Not Found" });
+    }
+  })
+);
 
 export default productRouter;
