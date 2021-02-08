@@ -19,7 +19,6 @@ export default function OrderListScreen(props) {
   useEffect(() => {
     // successDelete added to dependencies so if changes, dispatch(listOrders()) triggers again
     dispatch({ type: ORDER_DELETE_RESET });
-    
 
     dispatch(listOrders());
   }, [dispatch, successDelete]);
@@ -60,7 +59,7 @@ export default function OrderListScreen(props) {
                   <td>{order.user.name}</td>
                   <td>{order.createdAt.substring(0, 10)}</td>
                   <td>${order.totalPrice.toFixed(2)}</td>
-                  <td>{order.isPaid ? order.paidAt : "Not Paid"}</td>
+                  <td>{order.isPaid ? order.paidAt.substring(0, 10) : "Not Paid"}</td>
                   <td>
                     {order.isDelivered
                       ? order.deliveredAt.substring(0, 10)

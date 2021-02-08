@@ -3,10 +3,17 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { PayPalButton } from "react-paypal-button-v2";
-import { detailsOrder, paymentOrder } from "../actions/orderActions";
+import {
+  deliverOrder,
+  detailsOrder,
+  paymentOrder,
+} from "../actions/orderActions";
 import LoadingBox from "../components/LoadingBox";
 import MessageBox from "../components/MessageBox";
-import { ORDER_PAY_RESET } from "../constants/orderConstants";
+import {
+  ORDER_DELIVER_RESET,
+  ORDER_PAY_RESET,
+} from "../constants/orderConstants";
 
 function OrderScreen(props) {
   const orderId = props.match.params.id;
@@ -14,7 +21,7 @@ function OrderScreen(props) {
   const orderDetails = useSelector((state) => state.orderDetails);
   const { order, loading, error } = orderDetails;
 
-  const userSignin = useSelector(state => state.userSignin)
+  const userSignin = useSelector((state) => state.userSignin);
   const { userInfo } = userSignin;
 
   const orderPay = useSelector((state) => state.orderPay);
@@ -23,6 +30,14 @@ function OrderScreen(props) {
     error: errorPay,
     success: successPay,
   } = orderPay;
+
+  const orderDeliver = useSelector((state) => state.orderDeliver);
+  const {
+    loading: loadingDeliver,
+    error: errorDeliver,
+    success: successDeliver,
+  } = orderDeliver;
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -38,9 +53,15 @@ function OrderScreen(props) {
       document.body.appendChild(script);
     };
     // if order doesn't exist, load it by _id from backend, else proceed to complete payment transaction
-    if (!order || successPay || (order && order._id !== orderId)) {
+    if (
+      !order ||
+      successPay ||
+      successDeliver ||
+      (order && order._id !== orderId)
+    ) {
       // reset order pay to avoid infinite reloading
       dispatch({ type: ORDER_PAY_RESET });
+      dispatch({ type: ORDER_DELIVER_RESET });
       dispatch(detailsOrder(orderId));
     } else {
       // if order is paid
@@ -52,16 +73,16 @@ function OrderScreen(props) {
         }
       }
     }
-  }, [dispatch, order, orderId, sdkReady, successPay]);
+  }, [dispatch, order, orderId, sdkReady, successPay, successDeliver]);
 
   const successPaymentHandler = (paymentResult) => {
     //   dispatch order payment
     dispatch(paymentOrder(order, paymentResult));
   };
 
-  // const deliverHandler = () => {
-  //   dispatch(deliverOrder())
-  // }
+  const deliverHandler = () => {
+    dispatch(deliverOrder(order._id));
+  };
 
   return loading ? (
     <LoadingBox></LoadingBox>
@@ -188,13 +209,21 @@ function OrderScreen(props) {
                   )}
                 </li>
               )}
-              {/* {
-                userInfo.admin && order.isPaid && !order.isDelivered && (
-                  <li>
-                    <button type="button" onClick={deliverHandler}>Deliver Order</button>
-                  </li>
-                )
-              } */}
+              {userInfo.isAdmin && order.isPaid && !order.isDelivered && (
+                <li>
+                  {loadingDeliver && <LoadingBox />}
+                  {errorDeliver && (
+                    <MessageBox variant="danger">{errorDeliver}</MessageBox>
+                  )}
+                  <button
+                    type="button"
+                    className="primary block"
+                    onClick={deliverHandler}
+                  >
+                    Deliver Order
+                  </button>
+                </li>
+              )}
             </ul>
           </div>
         </div>
