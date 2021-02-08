@@ -80,4 +80,40 @@ orderRouter.put(
   })
 );
 
+orderRouter.delete(
+  '/:id',
+  isAuth,
+  isAdmin,
+  expressAsyncHandler(async (req, res) => {
+    // get the order by id
+    const order = await Order.findById(req.params.id);
+    if (order) {
+      const deleteOrder = await order.remove();
+      res.send({ message: 'Order Deleted Successfully', order: deleteOrder });
+    } else {
+      res.status(404).send({ message: 'Order Not Found' });
+    }
+  })
+);
+
+orderRouter.put(
+  "/:id/deliver",
+  isAuth,
+  expressAsyncHandler(async (req, res) => {
+    // get the order by id
+    const order = await Order.findById(req.params.id);
+    if (order) {
+      // update
+      order.isDelivered = true;
+      order.deliveredAt = Date.now();
+
+      // save update
+      const updatedOrder = await order.save();
+      res.send({ message: "Order Delivered Successfully", order: updatedOrder });
+    } else {
+      res.status(404).send({ message: "Order Not Found" });
+    }
+  })
+);
+
 export default orderRouter;

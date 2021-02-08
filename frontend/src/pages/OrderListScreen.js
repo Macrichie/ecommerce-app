@@ -1,26 +1,41 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { listOrders } from "../actions/orderActions";
+import { deleteOrder, listOrders } from "../actions/orderActions";
 import LoadingBox from "../components/LoadingBox";
 import MessageBox from "../components/MessageBox";
+import { ORDER_DELETE_RESET } from "../constants/orderConstants";
 
 export default function OrderListScreen(props) {
   const orderList = useSelector((state) => state.orderList);
   const { loading, error, orders } = orderList;
+  const orderDelete = useSelector((state) => state.orderDelete);
+  const {
+    loading: loadingDelete,
+    error: errorDelete,
+    success: successDelete,
+  } = orderDelete;
 
   const dispatch = useDispatch();
   useEffect(() => {
+    // successDelete added to dependencies so if changes, dispatch(listOrders()) triggers again
+    dispatch({ type: ORDER_DELETE_RESET });
+    
+
     dispatch(listOrders());
-  }, [dispatch]);
+  }, [dispatch, successDelete]);
 
   const deleteHandler = (order) => {
-    //   dispatch delete action
+    if (window.confirm("Are you sure to delete?")) {
+      dispatch(deleteOrder(order._id));
+    }
   };
 
   return (
     <div>
       <div className="orderHistory">
         <h1>Orders</h1>
+        {loadingDelete && <LoadingBox />}
+        {errorDelete && <MessageBox variant="danger">{errorDelete}</MessageBox>}
         {loading ? (
           <LoadingBox />
         ) : error ? (
@@ -40,7 +55,6 @@ export default function OrderListScreen(props) {
             </thead>
             <tbody>
               {orders.map((order) => (
-                  
                 <tr key={order._id}>
                   <td>{order._id}</td>
                   <td>{order.user.name}</td>
@@ -70,7 +84,6 @@ export default function OrderListScreen(props) {
                   </td>
                 </tr>
               ))}
-              
             </tbody>
           </table>
         )}

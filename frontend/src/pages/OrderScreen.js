@@ -14,6 +14,9 @@ function OrderScreen(props) {
   const orderDetails = useSelector((state) => state.orderDetails);
   const { order, loading, error } = orderDetails;
 
+  const userSignin = useSelector(state => state.userSignin)
+  const { userInfo } = userSignin;
+
   const orderPay = useSelector((state) => state.orderPay);
   const {
     loading: loadingPay,
@@ -55,6 +58,10 @@ function OrderScreen(props) {
     //   dispatch order payment
     dispatch(paymentOrder(order, paymentResult));
   };
+
+  // const deliverHandler = () => {
+  //   dispatch(deliverOrder())
+  // }
 
   return loading ? (
     <LoadingBox></LoadingBox>
@@ -181,6 +188,13 @@ function OrderScreen(props) {
                   )}
                 </li>
               )}
+              {/* {
+                userInfo.admin && order.isPaid && !order.isDelivered && (
+                  <li>
+                    <button type="button" onClick={deliverHandler}>Deliver Order</button>
+                  </li>
+                )
+              } */}
             </ul>
           </div>
         </div>
