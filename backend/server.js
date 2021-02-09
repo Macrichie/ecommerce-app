@@ -37,11 +37,15 @@ app.get("/api/config/paypal", (req, res) => {
 const __dirname = path.resolve()
 // middleware for image uploads
 app.use("/uploads", express.static(path.join(__dirname, '/uploads')));
+app.use(express.static(path.join(__dirname, '/frontend/build')));
+app.get('*', (req, res) =>
+  res.sendFile(path.join(__dirname, '/frontend/build/index.html'))
+);
 
 
-app.get('/', (req, res) => {
-  res.send('Server is ready');
-});
+// app.get('/', (req, res) => {
+//   res.send('Server is ready');
+// });
 
 // Error catcher, all errors will be redirected to this middleware and the right error message will be sent to the frontend
 app.use((err, req, res, next) => {
