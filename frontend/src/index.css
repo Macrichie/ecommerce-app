@@ -337,5 +337,16 @@ img.large {
 }
 .table button {
   margin: 0 0.2rem;
+  outline: none;
 }
 
+.statusMessage {
+  max-width: 350px;
+    padding: 10px;
+    margin: 0 auto;
+    background: transparent;
+}
+
+.statusMessage__text {
+  text-align: center !important;
+}
