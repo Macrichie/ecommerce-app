@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { deleteUser, listUsers } from "../actions/userActions";
 import LoadingBox from "../components/LoadingBox";
 import MessageBox from "../components/MessageBox";
+import { USER_DETAILS_RESET } from "../constants/userConstants";
 
 export default function UserListScreen(props) {
   const userList = useSelector((state) => state.userList);
@@ -18,6 +19,7 @@ export default function UserListScreen(props) {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(listUsers());
+    dispatch({type: USER_DETAILS_RESET})
   }, [dispatch, successDelete]);
 
   const deleteHandler = (user) => {
