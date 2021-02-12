@@ -13,6 +13,8 @@ import {
 } from "../constants/productConstants";
 
 export default function ProductListScreen(props) {
+  const sellerMode = props.match.path.indexOf("/seller") >= 0;
+
   const productList = useSelector((state) => state.productList);
   const { loading, error, products } = productList;
 
@@ -31,6 +33,9 @@ export default function ProductListScreen(props) {
     product: createdProduct,
   } = productCreate;
 
+  const userSignin = useSelector((state) => state.userSignin);
+  const { userInfo } = userSignin;
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -41,15 +46,23 @@ export default function ProductListScreen(props) {
     }
     // if successDelete changes from true to false, dispatch(listProducts()) triggers again
     // And if successDelete is true, dispatch reset delete
-    if(successDelete) {
-      dispatch({ type: PRODUCT_DELETE_RESET })
+    if (successDelete) {
+      dispatch({ type: PRODUCT_DELETE_RESET });
     }
-
-    dispatch(listProducts());
-  }, [dispatch, createdProduct, successCreate, successDelete, props.history]);
+    // iff sellerMode is true, list products of the specific user id
+    dispatch(listProducts({ seller: sellerMode ? userInfo._id : "" }));
+  }, [
+    dispatch,
+    createdProduct,
+    successCreate,
+    successDelete,
+    props.history,
+    sellerMode,
+    userInfo._id,
+  ]);
 
   const deleteHandler = (product) => {
-    if(window.confirm('Are you sure to delete?')) {
+    if (window.confirm("Are you sure to delete?")) {
       dispatch(deleteProduct(product._id));
     }
   };

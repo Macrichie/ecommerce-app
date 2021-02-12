@@ -1,20 +1,35 @@
 import express from "express";
 import expressAsyncHandler from "express-async-handler";
 import Order from "../models/orderModel.js";
-import { isAdmin, isAuth } from "../utils.js";
+import { isAdmin, isAuth, isSellerOrAdmin } from "../utils.js";
 
 const orderRouter = express.Router();
 
 // Send all orders to frontend
-orderRouter.get('/', isAuth, isAdmin, expressAsyncHandler(async(req, res) => {
-  const orders = await Order.find({}).populate('user', 'name')
-  res.send(orders)
-}))
+orderRouter.get(
+  "/",
+  isAuth,
+  isSellerOrAdmin,
+  expressAsyncHandler(async (req, res) => {
+    const seller = req.query.seller || "";
+    const sellerFilter = seller ? { seller } : {};
+    // if seller mode is true, return the orders of the current seller
+    const orders = await Order.find({ ...sellerFilter }).populate(
+      "user",
+      "name"
+    );
+    res.send(orders);
+  })
+);
 
-orderRouter.get('/myorderhistory', isAuth, expressAsyncHandler(async(req, res) => {
-  const orders = await Order.find({user: req.user._id})
-  res.send(orders)
-}))
+orderRouter.get(
+  "/myorderhistory",
+  isAuth,
+  expressAsyncHandler(async (req, res) => {
+    const orders = await Order.find({ user: req.user._id });
+    res.send(orders);
+  })
+);
 
 orderRouter.post(
   "/",
@@ -24,6 +39,7 @@ orderRouter.post(
       res.status(400).send({ message: "Cart is empty" });
     } else {
       const order = new Order({
+        seller: req.body.orderItems[0].seller,
         orderItems: req.body.orderItems,
         shippingAddress: req.body.shippingAddress,
         paymentMethod: req.body.paymentMethod,
@@ -81,7 +97,7 @@ orderRouter.put(
 );
 
 orderRouter.delete(
-  '/:id',
+  "/:id",
   isAuth,
   isAdmin,
   expressAsyncHandler(async (req, res) => {
@@ -89,9 +105,9 @@ orderRouter.delete(
     const order = await Order.findById(req.params.id);
     if (order) {
       const deleteOrder = await order.remove();
-      res.send({ message: 'Order Deleted Successfully', order: deleteOrder });
+      res.send({ message: "Order Deleted Successfully", order: deleteOrder });
     } else {
-      res.status(404).send({ message: 'Order Not Found' });
+      res.status(404).send({ message: "Order Not Found" });
     }
   })
 );
@@ -109,7 +125,10 @@ orderRouter.put(
 
       // save update
       const updatedOrder = await order.save();
-      res.send({ message: "Order Delivered Successfully", order: updatedOrder });
+      res.send({
+        message: "Order Delivered Successfully",
+        order: updatedOrder,
+      });
     } else {
       res.status(404).send({ message: "Order Not Found" });
     }

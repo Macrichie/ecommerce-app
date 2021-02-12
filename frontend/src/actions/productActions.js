@@ -18,12 +18,12 @@ import {
 } from "../constants/productConstants";
 
 // action function
-export const listProducts = () => async (dispatch) => {
+export const listProducts = ({seller=''}) => async (dispatch) => {
   dispatch({
     type: PRODUCT_LIST_REQUEST,
   });
   try {
-    const { data } = await Axios.get("/api/products");
+    const { data } = await Axios.get(`/api/products?seller=${seller}`);
     dispatch({
       type: PRODUCT_LIST_SUCCESS,
       payload: data,

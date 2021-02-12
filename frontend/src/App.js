@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Link, Route } from "react-router-dom";
 import { signout } from "./actions/userActions";
 import AdminRoute from "./components/AdminRoute";
 import PrivateRoute from "./components/PrivateRoute";
+import SellerRoute from "./components/SellerRoute";
 import CartScreen from "./pages/CartScreen";
 import HomeScreen from "./pages/HomeScreen";
 import OrderHistoryScreen from "./pages/OrderHistoryScreen";
@@ -27,7 +28,7 @@ function App() {
 
   const userSignin = useSelector((state) => state.userSignin);
   const { userInfo } = userSignin;
-  
+
   const dispatch = useDispatch();
   const signoutHandler = () => {
     dispatch(signout());
@@ -81,30 +82,44 @@ function App() {
             ) : (
               <Link to="/signin">Sign In</Link>
             )}
+            {/* Seller Menu */}
+            {userInfo && userInfo.isSeller && (
+              <div className="dropdown">
+                <Link to="#admin">
+                  Seller <i className="fa fa-caret-down"></i>
+                </Link>
+                <ul className="dropdown-content">
+                  <li>
+                    <Link to="/productlist/seller">Products</Link>
+                  </li>
+                  <li>
+                    <Link to="/orderlist/seller">Orders</Link>
+                  </li>
+                </ul>
+              </div>
+            )}
             {/* Admin dashboard */}
-            {
-              userInfo && userInfo.isAdmin && (
-                <div className="dropdown">
-                  <Link to="#admin">
-                    Admin <i className="fa fa-caret-down"></i>
-                  </Link>
-                  <ul className="dropdown-content">
-                    <li>
-                      <Link to="/dashboard">Dashboard</Link>
-                    </li>
-                    <li>
-                      <Link to="/productlist">Products</Link>
-                    </li>
-                    <li>
-                      <Link to="/orderlist">Orders</Link>
-                    </li>
-                    <li>
-                      <Link to="/userlist">Users</Link>
-                    </li>
-                  </ul>
-                </div>
-              )
-            }
+            {userInfo && userInfo.isAdmin && (
+              <div className="dropdown">
+                <Link to="#admin">
+                  Admin <i className="fa fa-caret-down"></i>
+                </Link>
+                <ul className="dropdown-content">
+                  <li>
+                    <Link to="/dashboard">Dashboard</Link>
+                  </li>
+                  <li>
+                    <Link to="/productlist">Products</Link>
+                  </li>
+                  <li>
+                    <Link to="/orderlist">Orders</Link>
+                  </li>
+                  <li>
+                    <Link to="/userlist">Users</Link>
+                  </li>
+                </ul>
+              </div>
+            )}
           </div>
         </header>
         <main>
@@ -112,7 +127,11 @@ function App() {
           <Route path="/cart/:id?" component={CartScreen}></Route>
 
           <Route path="/product/:id" component={ProductScreen} exact></Route>
-          <Route path="/product/:id/edit" component={ProductEditScreen} exact></Route>
+          <Route
+            path="/product/:id/edit"
+            component={ProductEditScreen}
+            exact
+          ></Route>
           <Route path="/signin" component={SigninScreen}></Route>
           <Route path="/register" component={RegisterScreen}></Route>
           <Route path="/shipping" component={ShippingAddressScreen}></Route>
@@ -120,23 +139,39 @@ function App() {
           <Route path="/placeorder" component={PlaceOrderScreen}></Route>
           <Route path="/order/:id" component={OrderScreen}></Route>
           <Route path="/orderhistory" component={OrderHistoryScreen}></Route>
-          
+
           <PrivateRoute
             path="/profile"
             component={ProfileScreen}
           ></PrivateRoute>
 
-          <AdminRoute path="/productlist"
-            component={ProductListScreen}></AdminRoute>
+          <SellerRoute
+            path="/productlist/seller"
+            component={ProductListScreen}
+          ></SellerRoute>
+          <SellerRoute
+            path="/orderlist/seller"
+            component={OrderListScreen}
+          ></SellerRoute>
 
-          <AdminRoute path="/orderlist"
-            component={OrderListScreen}></AdminRoute>
+          <AdminRoute
+            exact
+            path="/productlist"
+            component={ProductListScreen}
+          ></AdminRoute>
 
-          <AdminRoute path="/userlist"
-            component={UserListScreen}></AdminRoute>
+          <AdminRoute
+            exact
+            path="/orderlist"
+            component={OrderListScreen}
+          ></AdminRoute>
 
-          <AdminRoute path="/user/:id/edit"
-            component={UserEditScreen}></AdminRoute>
+          <AdminRoute path="/userlist" component={UserListScreen}></AdminRoute>
+
+          <AdminRoute
+            path="/user/:id/edit"
+            component={UserEditScreen}
+          ></AdminRoute>
 
           <Route exact path="/" component={HomeScreen}></Route>
         </main>

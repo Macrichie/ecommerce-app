@@ -11,6 +11,10 @@ export default function ProfileScreen() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
+  const [sellerName, setSellerName] = useState("");
+  const [sellerLogo, setSellerLogo] = useState("");
+  const [sellerDescription, setSellerDescription] = useState("");
+
   const userSignin = useSelector((state) => state.userSignin);
   const userDetails = useSelector((state) => state.userDetails);
   const { loading, error, user } = userDetails;
@@ -26,14 +30,20 @@ export default function ProfileScreen() {
 
   useEffect(() => {
     if (!user) {
-        // reset successUpdate eachtime user profile is opened for the second time
+      // reset successUpdate eachtime user profile is opened for the second time
       dispatch({ type: USER_UPDATE_PROFILE_RESET });
-    //   if user is null, dispatch action to pull data from backend
+      //   if user is null, dispatch action to pull data from backend
       dispatch(detailsUser(userInfo._id));
     } else {
-      // fill name & email fields with data from backend
+      // else fill name & email fields with data from backend
       setName(user.name);
       setEmail(user.email);
+      console.log(user.seller)
+      if (user.seller) {
+        setSellerName(user.seller.name);
+        setSellerLogo(user.seller.logo);
+        setSellerDescription(user.seller.description);
+      }
     }
     // if user object change from null to containing data from backend, useEffect runs again
   }, [dispatch, userInfo._id, user]);
@@ -44,7 +54,18 @@ export default function ProfileScreen() {
     if (password !== confirmPassword) {
       alert("Password and Confirm Password Does Not Datch");
     } else {
-      dispatch(updateUserProfile({ userId: user._id, name, email, password }));
+      // console.log(sellerName)
+      dispatch(
+        updateUserProfile({
+          userId: user._id,
+          name,
+          email,
+          password,
+          sellerName,
+          sellerLogo,
+          sellerDescription,
+        })
+      );
     }
   };
 
@@ -107,6 +128,41 @@ export default function ProfileScreen() {
                 onChange={(e) => setConfirmPassword(e.target.value)}
               />
             </div>
+            {user.isSeller && (
+              <>
+                <h1>Seller</h1>
+                <div>
+                  <label htmlFor="sellerName">Name</label>
+                  <input
+                    type="text"
+                    id="sellerName"
+                    placeholder="Enter Seller Name"
+                    value={sellerName}
+                    onChange={(e) => setSellerName(e.target.value)}
+                  />
+                </div>
+                <div>
+                  <label htmlFor="sellerLogo">Seller Logo</label>
+                  <input
+                    type="text"
+                    id="sellerLogo"
+                    placeholder="Enter Seller Logo"
+                    value={sellerLogo}
+                    onChange={(e) => setSellerLogo(e.target.value)}
+                  />
+                </div>
+                <div>
+                  <label htmlFor="sellerDescription">Seller Description</label>
+                  <input
+                    type="text"
+                    id="sellerDescription"
+                    placeholder="Enter Seller Description"
+                    value={sellerDescription}
+                    onChange={(e) => setSellerDescription(e.target.value)}
+                  />
+                </div>
+              </>
+            )}
             <div>
               <label />
               <button className="primary" type="submit">
