@@ -63,6 +63,14 @@ footer {
   align-items: flex-start;
 }
 
+.row.start {
+  justify-content: flex-start;
+}
+
+.p-1 {
+  padding: 1rem;
+}
+
 /* Commons */
 h1 {
   font-size: 1.8rem;
@@ -239,6 +247,9 @@ img.large {
 }
 .col-2 {
   flex: 2 1 50rem;
+}
+.col-3 {
+  flex: 3 1 75rem;
 }
 .min-30 {
   min-width: 30rem;
