@@ -361,3 +361,8 @@ img.large {
 .statusMessage__text {
   text-align: center !important;
 }
+
+/* Carousel */
+.carousel .slide img {
+  max-width: 30rem;
+}
