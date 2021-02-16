@@ -1,5 +1,6 @@
 import {
   CART_ADD_ITEM,
+  CART_ADD_ITEM_FAIL,
   CART_EMPTY,
   CART_REMOVE_ITEM,
   CART_SAVE_PAYMENT_METHOD,
@@ -18,6 +19,7 @@ export const cartReducer = (state = { cartItems: [] }, action) => {
       if (existingItemInCart) {
         return {
           ...state,
+          error: '',
           cartItems: state.cartItems.map((item) =>
             item.product === existingItemInCart.product
               ? currentItemToBeAdded
@@ -27,12 +29,14 @@ export const cartReducer = (state = { cartItems: [] }, action) => {
       } else {
         return {
           ...state,
+          error: '',
           cartItems: [...state.cartItems, currentItemToBeAdded],
         };
       }
     case CART_REMOVE_ITEM:
       return {
         ...state,
+        error: '',
         cartItems: state.cartItems.filter(
           (item) => item.product !== action.payload
         ),
@@ -47,9 +51,15 @@ export const cartReducer = (state = { cartItems: [] }, action) => {
         ...state,
         paymentMethod: action.payload,
       };
+    case CART_ADD_ITEM_FAIL:
+      return {
+        ...state,
+        error: action.payload,
+      };
     case CART_EMPTY:
       return {
         ...state,
+        error: '',
         cartItems: []
       }
     default:

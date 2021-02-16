@@ -7,12 +7,12 @@ import MessageBox from "../components/MessageBox";
 function CartScreen(props) {
   const productId = props.match.params.id;
   const qty = props.location.search
-  ? Number(props.location.search.split("=")[1])
-  : 1;
-  
+    ? Number(props.location.search.split("=")[1])
+    : 1;
+
   const cart = useSelector((state) => state.cart);
-  const { cartItems } = cart;
-  
+  const { cartItems, error } = cart;
+
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(addToCart(productId, qty));
@@ -20,7 +20,7 @@ function CartScreen(props) {
 
   const removeFromCarthandler = (id) => {
     // delete action
-    dispatch(removeFromCart(id))
+    dispatch(removeFromCart(id));
   };
 
   const checkoutHandler = () => {
@@ -31,6 +31,7 @@ function CartScreen(props) {
     <div className="row top">
       <div className="col-2">
         <h1>Shopping Cart</h1>
+        {error && (<MessageBox variant="danger">{error}</MessageBox>)}
         {cartItems.length === 0 ? (
           <MessageBox>
             Cart is empty. <Link to="/">Go Shopping</Link>
