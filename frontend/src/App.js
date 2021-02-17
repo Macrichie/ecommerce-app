@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Link, Route } from "react-router-dom";
 import { signout } from "./actions/userActions";
 import AdminRoute from "./components/AdminRoute";
 import PrivateRoute from "./components/PrivateRoute";
+import SearchBox from "./components/SearchBox";
 import SellerRoute from "./components/SellerRoute";
 import CartScreen from "./pages/CartScreen";
 import HomeScreen from "./pages/HomeScreen";
@@ -17,6 +18,7 @@ import ProductListScreen from "./pages/ProductListScreen";
 import ProductScreen from "./pages/ProductScreen";
 import ProfileScreen from "./pages/ProfileScreen";
 import RegisterScreen from "./pages/RegisterScreen";
+import SearchScreen from "./pages/SearchScreen";
 import SellerScreen from "./pages/SellerScreen";
 import ShippingAddressScreen from "./pages/ShippingAddressScreen";
 import SigninScreen from "./pages/SigninScreen";
@@ -43,6 +45,12 @@ function App() {
             <Link className="brand" to="/">
               Amazoné
             </Link>
+          </div>
+          <div>
+            {/* pass react-router-dom properties to the SearchBox component using render function */}
+            <Route
+              render={({ history }) => <SearchBox history={history} />}
+            ></Route>
           </div>
           <div className="menu">
             <Link to="/cart">
@@ -125,7 +133,7 @@ function App() {
         </header>
         <main>
           <Route path="/seller/:id" component={SellerScreen}></Route>
-          {/* /cart/:id? -> ? is added so if user directly goto cart, it should show shopping cart without adding a new item to the cart */}
+          {/* /cart/:id? -> ? option is added so if user directly goto cart, it should show shopping cart without adding a new item to the cart */}
           <Route path="/cart/:id?" component={CartScreen}></Route>
 
           <Route path="/product/:id" component={ProductScreen} exact></Route>
@@ -141,6 +149,7 @@ function App() {
           <Route path="/placeorder" component={PlaceOrderScreen}></Route>
           <Route path="/order/:id" component={OrderScreen}></Route>
           <Route path="/orderhistory" component={OrderHistoryScreen}></Route>
+          <Route path="/search/name/:name?" component={SearchScreen} exact></Route>
 
           <PrivateRoute
             path="/profile"
