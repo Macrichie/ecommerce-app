@@ -5,16 +5,31 @@ import { listProducts } from "../actions/productActions";
 import LoadingBox from "../components/LoadingBox";
 import MessageBox from "../components/MessageBox";
 import Product from "../components/Product";
+import { Link } from "react-router-dom";
 
 export default function SearchScreen(props) {
   // if there is no name specified, use all
-  const { name = "all" } = useParams(); // from react-router-dom
+  const { name = "all", category='all' } = useParams(); // from react-router-dom
   const dispatch = useDispatch();
   const productList = useSelector((state) => state.productList);
   const { loading, error, products } = productList;
+
+  const productCategoryList = useSelector((state) => state.productCategoryList);
+  const {
+    loading: loadingCategories,
+    error: errorCategories,
+    categories,
+  } = productCategoryList;
+
   useEffect(() => {
-    dispatch(listProducts({ name: name !== "all" ? name : "" }));
-  }, [dispatch, name]);
+    dispatch(listProducts({ name: name !== "all" ? name : "", category: category !== "all" ? category : "" }));
+  }, [category, dispatch, name]);
+
+  const getFilterUrl = (filter) => {
+    const filterCategory = filter.category || category;
+    const filterName = filter.name || name;
+    return `/search/category/${filterCategory}/name/${filterName}`;
+  }
 
   return (
     <div>
@@ -30,9 +45,20 @@ export default function SearchScreen(props) {
       <div className="row top">
         <div className="col-1">
           <h3>Department</h3>
-          <ul>
-            <li>Category 1</li>
-          </ul>
+          {loadingCategories ? (
+            <LoadingBox />
+          ) : errorCategories ? (
+            <MessageBox variant="danger">{errorCategories}</MessageBox>
+          ) : (
+            <ul>
+              {categories.map((cat) => (
+                <li key={cat}>
+                  <Link className={cat === category ? 'active' : ''} to={getFilterUrl({ category: cat })}>{cat}</Link>
+                </li>
+              ))}
+            </ul>
+          )}
+          
         </div>
         <div className="col-3">
           {loading ? (

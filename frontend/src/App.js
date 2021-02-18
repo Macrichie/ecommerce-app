@@ -1,8 +1,11 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { BrowserRouter as Router, Link, Route } from "react-router-dom";
+import { listProductCategory } from "./actions/productActions";
 import { signout } from "./actions/userActions";
 import AdminRoute from "./components/AdminRoute";
+import LoadingBox from "./components/LoadingBox";
+import MessageBox from "./components/MessageBox";
 import PrivateRoute from "./components/PrivateRoute";
 import SearchBox from "./components/SearchBox";
 import SellerRoute from "./components/SellerRoute";
@@ -26,6 +29,7 @@ import UserEditScreen from "./pages/UserEditScreen";
 import UserListScreen from "./pages/UserListScreen";
 
 function App() {
+  const [sidebarIsOpen, setSidebarIsOpen] = useState(false);
   const cart = useSelector((state) => state.cart);
   const { cartItems } = cart;
 
@@ -37,11 +41,29 @@ function App() {
     dispatch(signout());
   };
 
+  const productCategoryList = useSelector((state) => state.productCategoryList);
+  const {
+    loading: loadingCategories,
+    error: errorCategories,
+    categories,
+  } = productCategoryList;
+
+  useEffect(() => {
+    dispatch(listProductCategory());
+  }, [dispatch]);
+
   return (
     <Router>
       <div className="grid-container">
         <header className="row">
           <div>
+            <button
+              type="button"
+              className="open-sidebar"
+              onClick={() => setSidebarIsOpen(true)}
+            >
+              <i className="fa fa-bars"></i>
+            </button>
             <Link className="brand" to="/">
               Amazoné
             </Link>
@@ -131,6 +153,31 @@ function App() {
             )}
           </div>
         </header>
+        <aside className={sidebarIsOpen ? "open" : ""}>
+          <ul className="categories">
+            <li>
+              <strong>Categories</strong>
+              <button
+                type="button"
+                onClick={() => setSidebarIsOpen(false)}
+                className="close-side"
+              >
+                <i className="fa fa-close"></i>
+              </button>
+            </li>
+            {loadingCategories ? (
+            <LoadingBox />
+          ) : errorCategories ? (
+            <MessageBox variant="danger">{errorCategories}</MessageBox>
+          ) : (
+            categories.map((cat) => (
+                <li key={cat}>
+                  <Link onClick={() => setSidebarIsOpen(false)} to={`/search/category/${cat}`}>{cat}</Link>
+                </li>
+              ))
+          )}
+          </ul>
+        </aside>
         <main>
           <Route path="/seller/:id" component={SellerScreen}></Route>
           {/* /cart/:id? -> ? option is added so if user directly goto cart, it should show shopping cart without adding a new item to the cart */}
@@ -149,7 +196,21 @@ function App() {
           <Route path="/placeorder" component={PlaceOrderScreen}></Route>
           <Route path="/order/:id" component={OrderScreen}></Route>
           <Route path="/orderhistory" component={OrderHistoryScreen}></Route>
-          <Route path="/search/name/:name?" component={SearchScreen} exact></Route>
+          <Route
+            path="/search/name/:name?"
+            component={SearchScreen}
+            exact
+          ></Route>
+          <Route
+            path="/search/category/:category"
+            component={SearchScreen}
+            exact
+          ></Route>
+          <Route
+            path="/search/category/:category/name/:name"
+            component={SearchScreen}
+            exact
+          ></Route>
 
           <PrivateRoute
             path="/profile"

@@ -1,4 +1,7 @@
 import {
+  PRODUCT_CATEGORY_LIST_FAIL,
+  PRODUCT_CATEGORY_LIST_REQUEST,
+  PRODUCT_CATEGORY_LIST_SUCCESS,
   PRODUCT_CREATE_FAIL,
   PRODUCT_CREATE_REQUEST,
   PRODUCT_CREATE_RESET,
@@ -32,6 +35,27 @@ export const productListReducer = (
       // loading is false coz we now have a res data
       return { loading: false, products: action.payload };
     case PRODUCT_LIST_FAIL:
+      // loading is false coz we now have a error message
+      return { loading: false, error: action.payload };
+    default:
+      // if none of the action types, return state
+      return state;
+  }
+};
+
+// List Category reducer
+export const productCategoryListReducer = (
+  state = { loading: true, categories: [] },
+  action
+) => {
+  switch (action.type) {
+    case PRODUCT_CATEGORY_LIST_REQUEST:
+      // AJAX request is sent to backend and we await response
+      return { loading: true };
+    case PRODUCT_CATEGORY_LIST_SUCCESS:
+      // loading is false coz we now have a res data
+      return { loading: false, categories: action.payload };
+    case PRODUCT_CATEGORY_LIST_FAIL:
       // loading is false coz we now have a error message
       return { loading: false, error: action.payload };
     default:
