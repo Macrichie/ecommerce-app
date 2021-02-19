@@ -1,6 +1,6 @@
 import React from 'react'
 
-function Rating({ rating, numReviews}) {
+function Rating({ rating, numReviews, caption}) {
     return (
         <div className="rating">
         <span>
@@ -18,7 +18,7 @@ function Rating({ rating, numReviews}) {
         <span>
         <i className={rating >=5 ? "fa fa-star" : rating >=4.5 ? "fa fa-star-half-o" : "fa fa-star-o"}></i>
         </span>
-        <span className="reviews">{`${numReviews} reviews`}</span>
+        {caption ? <span>{caption}</span> : <span className="reviews">{`${numReviews} reviews`}</span>}
       </div>
     )
 }

@@ -111,6 +111,7 @@ input,
 select,
 textarea,
 button {
+  outline: none;
   padding: 1rem;
   border-radius: 0.5rem;
   border: 0.1rem #a4a4a4 solid;
@@ -408,14 +409,50 @@ button.open-sidebar:hover {
   border-color: #ffffff;
 }
 aside ul {
-  padding: 0;
+  padding: 20px;
   list-style: none;
 }
 aside li {
   display: flex;
   justify-content: space-between;
   padding: 1rem;
+  border: 1px solid lightgray;
+  color: #203040;
 }
+aside li:hover {
+  transform: scale(.9, .9);
+  background-color: rgb(230, 230, 230);
+  cursor: pointer;
+}
+
 button.close-sidebar {
   padding: 0.3rem 0.8rem;
+}
+
+.category-list>a {
+  color: #203040;
+}
+.category-list>a:hover {
+  color: #f08000;
+}
+
+.department{
+  background-color: rgb(230, 230, 230);
+  padding: 5px 20px 15px 20px;
+  margin-left: 5px;
+  margin-right: 15px;
+  color: #203040;
+}
+.department li>a{
+  color: #203040;
+  margin: 20px;
+}
+.active {
+  font-weight: bold;
+}
+
+.department li>a:hover{
+  color: #f08000;
+  font-weight: bold;
+  cursor: pointer;
 }

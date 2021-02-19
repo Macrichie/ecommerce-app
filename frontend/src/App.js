@@ -171,7 +171,7 @@ function App() {
             <MessageBox variant="danger">{errorCategories}</MessageBox>
           ) : (
             categories.map((cat) => (
-                <li key={cat}>
+                <li className="category-list" key={cat}>
                   <Link onClick={() => setSidebarIsOpen(false)} to={`/search/category/${cat}`}>{cat}</Link>
                 </li>
               ))
@@ -208,6 +208,11 @@ function App() {
           ></Route>
           <Route
             path="/search/category/:category/name/:name"
+            component={SearchScreen}
+            exact
+          ></Route>
+          <Route
+            path="/search/category/:category/name/:name/min/:min/max/:max/rating/:rating/order/:order"
             component={SearchScreen}
             exact
           ></Route>

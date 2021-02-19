@@ -12,17 +12,39 @@ productRouter.get(
   expressAsyncHandler(async (req, res) => {
     const name = req.query.name || "";
     const category = req.query.category || "";
-    // filter name using Mongodb regular expression
-    const nameFilter = name ? { name: { $regex: name, $options: "i" } } : {};
     const seller = req.query.seller || "";
+    const order = req.query.order || "";
+    const min =
+      req.query.min && Number(req.query.min) !== 0 ? Number(req.query.min) : 0;
+    const max =
+      req.query.max && Number(req.query.max) !== 0 ? Number(req.query.max) : 0;
+    const rating =
+      req.query.rating && Number(req.query.rating) !== 0
+        ? Number(req.query.rating)
+        : 0;
+
+    // filter name using Mongodb Regular Expression
+    const nameFilter = name ? { name: { $regex: name, $options: "i" } } : {};
     const sellerFilter = seller ? { seller } : {};
     const categoryFilter = category ? { category } : {};
+    const priceFilter = min && max ? { price: { $gte: min, $lte: max } } : {};
+    const ratingFilter = rating ? { rating: { $gte: rating } } : {};
+    const sortOrder =
+      order === "lowest"
+        ? { price: 1 }
+        : order === "highest"
+        ? { price: -1 }
+        : order === "toprated"
+        ? { rating: -1 }
+        : { _id: -1 };
 
     const products = await Product.find({
       ...sellerFilter,
       ...nameFilter,
       ...categoryFilter,
-    }).populate("seller", "seller.name seller.logo"); // get all products with respective sellers name
+      ...priceFilter,
+      ...ratingFilter,
+    }).populate("seller", "seller.name seller.logo").sort(sortOrder); // get all products with respective sellers name in order
     res.send(products);
   })
 );
