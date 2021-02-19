@@ -44,7 +44,9 @@ productRouter.get(
       ...categoryFilter,
       ...priceFilter,
       ...ratingFilter,
-    }).populate("seller", "seller.name seller.logo").sort(sortOrder); // get all products with respective sellers name in order
+    })
+      .populate("seller", "seller.name seller.logo")
+      .sort(sortOrder); // get all products with respective sellers name in order
     res.send(products);
   })
 );
@@ -147,6 +149,44 @@ productRouter.delete(
       res.send({
         message: "Product Successfully Removed!",
         product: deletedProduct,
+      });
+    } else {
+      res.status(404).send({ message: "Product Not Found" });
+    }
+  })
+);
+
+// Product review
+productRouter.post(
+  "/:id/reviews",
+  isAuth,
+  expressAsyncHandler(async (req, res) => {
+    const productId = req.params.id;
+    const product = await Product.findById(productId);
+    if (product) {
+      if (product.reviews.find((x) => x.name === req.user.name)) {
+        return res
+          .status(400)
+          .send({ message: "You already submitted a review" });
+      }
+      // req.user.name is used in order to make each product reviewer unique and prevent reviewers from impersonating
+      const review = {
+        name: req.user.name,
+        rating: Number(req.body.rating),
+        comment: req.body.comment,
+      };
+      // push review to reviews array
+      product.reviews.push(review);
+      product.numReviews = product.reviews.length;
+      product.rating =
+        product.reviews.reduce(
+          (accum, currentRev) => currentRev.rating + accum,
+          0
+        ) / product.reviews.length;
+      const updatedProduct = await product.save();
+      res.status(201).send({
+        message: "Review Created",
+        review: updatedProduct.reviews[updatedProduct.reviews.length - 1],
       });
     } else {
       res.status(404).send({ message: "Product Not Found" });

@@ -456,3 +456,25 @@ button.close-sidebar {
   font-weight: bold;
   cursor: pointer;
 }
+
+div>ul>li.rev {
+  background-color: #EAEDED;
+  padding: 15px 20px 15px 20px;
+  margin-bottom: 30px;
+  margin-left: auto;
+  margin-right: auto;
+  color: #203040;
+  max-width: 46rem;
+  width: 100%;
+  border: 1px solid lightgray;
+
+  box-shadow: 4px 7px 8px -4px rgba(0,0,0,0.61);
+  -webkit-box-shadow: 4px 7px 8px -4px rgba(0,0,0,0.61);
+  -moz-box-shadow: 4px 7px 8px -4px rgba(0,0,0,0.61); 
+}
+
+div>h2#reviews {
+  text-align: center;
+  border-top: 1px solid lightgray;
+  margin-top: 50px;
+}
