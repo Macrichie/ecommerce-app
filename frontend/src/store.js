@@ -20,6 +20,7 @@ import {
   productUpdateReducer,
 } from "./reducers/productReducers";
 import {
+  userAddressMapReducer,
   userDeleteReducer,
   userDetalsReducer,
   userListReducer,
@@ -73,6 +74,7 @@ const reducer = combineReducers({
   userTopSellersList: userTopSellerListReducer,
   productCategoryList: productCategoryListReducer,
   productReviewCreate: productReviewCreateReducer,
+  userAddressMap: userAddressMapReducer,
 });
 
 const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

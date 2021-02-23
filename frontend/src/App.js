@@ -11,6 +11,7 @@ import SearchBox from "./components/SearchBox";
 import SellerRoute from "./components/SellerRoute";
 import CartScreen from "./pages/CartScreen";
 import HomeScreen from "./pages/HomeScreen";
+import MapScreen from "./pages/MapScreen";
 import OrderHistoryScreen from "./pages/OrderHistoryScreen";
 import OrderListScreen from "./pages/OrderListScreen";
 import OrderScreen from "./pages/OrderScreen";
@@ -220,6 +221,11 @@ function App() {
           <PrivateRoute
             path="/profile"
             component={ProfileScreen}
+          ></PrivateRoute>
+
+          <PrivateRoute
+            path="/map"
+            component={MapScreen}
           ></PrivateRoute>
 
           <SellerRoute
