@@ -28,10 +28,10 @@ export const listProducts = ({
   seller = "",
   name = "",
   category = "",
+  order = "",
   min = 0,
   max = 0,
   rating = 0,
-  order = "",
 }) => async (dispatch) => {
   dispatch({
     type: PRODUCT_LIST_REQUEST,

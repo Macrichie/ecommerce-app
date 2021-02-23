@@ -17,7 +17,7 @@ export default function SearchScreen(props) {
     min = 0,
     max = 0,
     rating = 0,
-    order = "",
+    order = "newest",
   } = useParams(); // from react-router-dom
   const dispatch = useDispatch();
   const productList = useSelector((state) => state.productList);
@@ -115,6 +115,7 @@ export default function SearchScreen(props) {
               {prices.map((price) => (
                 <li key={price.name}>
                   <Link
+                    // if minPrice-maxPrice is equal to selected min-max, make add active style
                     className={
                       `${price.min}-${price.max}` === `${min}-${max}`
                         ? "active"
