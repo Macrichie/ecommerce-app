@@ -5,7 +5,6 @@ import { productDetails, updateProduct } from "../actions/productActions";
 import LoadingBox from "../components/LoadingBox";
 import MessageBox from "../components/MessageBox";
 import { PRODUCT_UPDATE_RESET } from "../constants/productConstants";
-import data from "../data";
 
 export default function ProductEditScreen(props) {
   // get id from url
@@ -22,15 +21,15 @@ export default function ProductEditScreen(props) {
   const { loading, error, product } = details;
 
   const productUpdate = useSelector((state) => state.productUpdate);
-
-  const userSignin = useSelector(state => state.userSignin)
-  const { userInfo } = userSignin
-
   const {
     loading: loadingUpdate,
     error: errorUpdate,
     success: successUpdate,
   } = productUpdate;
+
+  const userSignin = useSelector(state => state.userSignin)
+  const { userInfo } = userSignin
+
 
   const dispatch = useDispatch();
   useEffect(() => {

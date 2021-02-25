@@ -18,7 +18,7 @@ function Product({ product }) {
           <div>
             <Link to={`/seller/${product.seller._id}`}>
               {/* product.seller.seller.name points to the product model.seller which refs user model object, which then points the usermodel.seller.name */}
-              {product.seller.seller.name}
+              {product.seller.seller?.name}
             </Link>
           </div>
         </div>

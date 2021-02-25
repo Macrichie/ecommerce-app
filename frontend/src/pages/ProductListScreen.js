@@ -49,7 +49,7 @@ export default function ProductListScreen(props) {
     if (successDelete) {
       dispatch({ type: PRODUCT_DELETE_RESET });
     }
-    // iff sellerMode is true, list products of the specific user id
+    // if sellerMode is true, list products of the specific user id
     dispatch(listProducts({ seller: sellerMode ? userInfo._id : "" }));
   }, [
     dispatch,

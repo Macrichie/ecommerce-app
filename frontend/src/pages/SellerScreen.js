@@ -73,7 +73,7 @@ export default function SellerScreen(props) {
             <div className="row center">
                 {/* similar to home screen */}
               {products.map((product) => (
-                <Product key={product._id} product={product}></Product>
+                <Product key={product._id} product={product} />
               ))}
             </div>
           </>
