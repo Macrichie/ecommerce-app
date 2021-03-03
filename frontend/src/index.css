@@ -502,3 +502,51 @@ div>h2#reviews {
   border-radius: 0 1rem 1rem 0;
   border-left: 0;
 }
+
+/* Pagination */
+.pagination a {
+  padding: 1rem;
+  margin: 0.5rem;
+  border-radius: 0.5rem;
+  border: 0.1rem #a4a4a4 solid;
+  font-size: 1.6rem;
+  font-family: Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.pagination a.active {
+  font-weight: bold;
+}
+.center {
+  justify-content: center;
+}
+
+
+/* Media query */
+@media only screen and (max-width: 640px) {
+  .search input {
+    border-radius: 0.5rem 0 0 0.5rem;
+    border-right: none;
+    margin-left: 0.5rem;
+    outline: none;
+    width: 150px;
+  }
+}
+@media only screen and (max-width: 720px) {
+  .search input {
+    border-radius: 0.5rem 0 0 0.5rem;
+    border-right: none;
+    margin-left: 0.5rem;
+    outline: none;
+    width: 180px;
+  }
+}
+@media only screen and (max-width: 800px) {
+  .search input {
+    border-radius: 0.5rem 0 0 0.5rem;
+    border-right: none;
+    margin-left: 0.5rem;
+    outline: none;
+    width: 200px;
+  }
+}

@@ -2,6 +2,7 @@ import express from "express";
 import expressAsyncHandler from "express-async-handler";
 import data from "../data.js";
 import Product from "../models/productModel.js";
+import User from "../models/userModel.js";
 import { isAdmin, isAuth, isSellerOrAdmin } from "../utils.js";
 
 const productRouter = express.Router();
@@ -10,6 +11,8 @@ const productRouter = express.Router();
 productRouter.get(
   "/",
   expressAsyncHandler(async (req, res) => {
+    const pageSize = 3;
+    const page = Number(req.query.pageNumber) || 1;
     const name = req.query.name || "";
     const category = req.query.category || "";
     const seller = req.query.seller || "";
@@ -38,6 +41,14 @@ productRouter.get(
         ? { rating: -1 }
         : { _id: -1 };
 
+    const count = await Product.count({
+      ...sellerFilter,
+      ...nameFilter,
+      ...categoryFilter,
+      ...priceFilter,
+      ...ratingFilter,
+    })
+
     const products = await Product.find({
       ...sellerFilter,
       ...nameFilter,
@@ -46,8 +57,11 @@ productRouter.get(
       ...ratingFilter,
     })
       .populate("seller", "seller.name seller.logo")
-      .sort(sortOrder); // get all products with respective sellers name in order
-    res.send(products);
+      .sort(sortOrder) // get all products with respective sellers name in order
+      .skip(pageSize * (page - 1)) // skip unwanted records and find exact record in the list that you want
+      .limit(pageSize) // only gets a limited number of item based on pageSize
+      ;
+    res.send({products, page, pages: Math.ceil(count/pageSize)});
   })
 );
 
@@ -65,8 +79,19 @@ productRouter.get(
   "/seed",
   expressAsyncHandler(async (req, res) => {
     // await Product.remove({});
-    const createProducts = await Product.insertMany(data.products);
-    res.send({ createProducts });
+    const seller = await User.findOne({ isSeller: true });
+    if (seller) {
+      const products = data.products.map((product) => ({
+        ...product,
+        seller: seller._id,
+      }));
+      const createProducts = await Product.insertMany(products);
+      res.send({ createProducts });
+    } else {
+      res
+        .status(500)
+        .send({ message: "No seller found. first run /api/users/seed" });
+    }
   })
 );
 
@@ -93,11 +118,9 @@ productRouter.post(
   isSellerOrAdmin,
   expressAsyncHandler(async (req, res) => {
     const product = new Product({
-      name: "sample" + Date.now(),
+      name: "productname" + Date.now(),
       seller: req.user._id,
-      image:
-        "https://images.unsplash.com/photo-1610240050559-e48c408c3eec?ixid=MXwxMjA3fDB8MHx0b3BpYy1mZWVkfDQxfFM0TUtMQXNCQjc0fHxlbnwwfHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60" +
-        1,
+      image: "/images/p10.jpg",
       price: 0,
       category: "sample category",
       brand: "sample brand",

@@ -37,7 +37,7 @@ export const productListReducer = (
       return { loading: true };
     case PRODUCT_LIST_SUCCESS:
       // loading is false coz we now have a res data
-      return { loading: false, products: action.payload };
+      return { loading: false, products: action.payload.products, pages: action.payload.pages, page: action.payload.page };
     case PRODUCT_LIST_FAIL:
       // loading is false coz we now have a error message
       return { loading: false, error: action.payload };
